@@ -16,7 +16,7 @@ mydb = MySQLdb.connect(
     user="root",
     passwd="vision9551",
     host="127.0.0.1",
-    db="kisti_crawl",
+    db="temp",
 )
 # 커서 생성
 cursor = mydb.cursor()
@@ -45,7 +45,6 @@ def insert_db(product_info,product_spectable,review_keyword):
     product_info_dict["level2"] = checkDictValue_str(product_info,"Level_2")
     product_info_dict["level3"] = checkDictValue_str(product_info,"Level_3")
     product_info_dict["level4"] = checkDictValue_str(product_info,"Level_4")
-    product_info_dict["level5"] = checkDictValue_str(product_info,"Level_5")
     product_info_dict["product_name"] = checkDictValue_str(product_info,"Name")
     product_info_dict["product_price"] = checkDictValue_int(product_info,"Price")
     product_info_dict["launch_date"] = checkDictValue_str(product_info,"LaunchDate")
@@ -58,7 +57,7 @@ def insert_db(product_info,product_spectable,review_keyword):
     product_info_dict["2star"] = checkDictValue_int(product_info,"2star")
     product_info_dict["1star"] = checkDictValue_int(product_info,"1star")
     # print(product_info_dict)
-    cursor.execute(f"""INSERT INTO `dnw_product_info_tb` (pcategory,pcode,product_idx,create_date,level1,level2,level3,level4,level5,product_name,product_price,launch_date,brand_name,review_score,review_number,5star,4star,3star,2star,1star) VALUES("{product_info_dict["pcategory"]}","{product_info_dict["pcode"]}",{product_info_dict["product_idx"]},"{product_info_dict["create_date"]}","{product_info_dict["level1"]}","{product_info_dict["level2"]}","{product_info_dict["level3"]}","{product_info_dict["level4"]}","{product_info_dict["level5"]}","{product_info_dict["product_name"]}",{product_info_dict["product_price"]},"{product_info_dict["launch_date"]}","{product_info_dict["brand_name"]}",{product_info_dict["review_score"]},{product_info_dict["review_number"]},{product_info_dict["5star"]},{product_info_dict["4star"]},{product_info_dict["3star"]},{product_info_dict["2star"]},{product_info_dict["1star"]})""")
+    cursor.execute(f"""INSERT INTO `dnw_product_info` (pcategory,pcode,product_idx,create_date,level1,level2,level3,level4,product_name,product_price,launch_date,brand_name,review_score,review_number,5star,4star,3star,2star,1star) VALUES("{product_info_dict["pcategory"]}","{product_info_dict["pcode"]}",{product_info_dict["product_idx"]},"{product_info_dict["create_date"]}","{product_info_dict["level1"]}","{product_info_dict["level2"]}","{product_info_dict["level3"]}","{product_info_dict["level4"]}","{product_info_dict["product_name"]}",{product_info_dict["product_price"]},"{product_info_dict["launch_date"]}","{product_info_dict["brand_name"]}",{product_info_dict["review_score"]},{product_info_dict["review_number"]},{product_info_dict["5star"]},{product_info_dict["4star"]},{product_info_dict["3star"]},{product_info_dict["2star"]},{product_info_dict["1star"]})""")
     mydb.commit()
 
     index_1 = 1
@@ -71,7 +70,7 @@ def insert_db(product_info,product_spectable,review_keyword):
         product_spectable_dict["title"] = key
         product_spectable_dict["content"] = checkDictValue_str(product_spectable,key)
         #print(feature_rating_dict)
-        cursor.execute(f"""INSERT INTO `dnw_product_detail_tb` (pcategory,pcode,product_idx,create_date,title,content) VALUES("{product_spectable_dict["pcategory"]}","{product_spectable_dict["pcode"]}",{product_spectable_dict["product_idx"]},"{product_spectable_dict["create_date"]}","{product_spectable_dict["title"]}","{product_spectable_dict["content"].replace("○","O")}")""")
+        cursor.execute(f"""INSERT INTO `dnw_product_detail` (pcategory,pcode,product_idx,create_date,title,content) VALUES("{product_spectable_dict["pcategory"]}","{product_spectable_dict["pcode"]}",{product_spectable_dict["product_idx"]},"{product_spectable_dict["create_date"]}","{product_spectable_dict["title"]}","{product_spectable_dict["content"].replace("○","O")}")""")
         mydb.commit()
         index_1 += 1
     
@@ -84,7 +83,7 @@ def insert_db(product_info,product_spectable,review_keyword):
         review_keyword_dict["create_date"] = create_date
         review_keyword_dict["keyword"] = checkDictValue_str(review_keyword,key)
         #print(feature_rating_dict)
-        cursor.execute(f"""INSERT INTO `dnw_review_keyword_tb` (pcategory,pcode,product_idx,create_date,keyword) VALUES("{review_keyword_dict["pcategory"]}","{review_keyword_dict["pcode"]}",{review_keyword_dict["product_idx"]},"{review_keyword_dict["create_date"]}","{review_keyword_dict["keyword"]}")""")
+        cursor.execute(f"""INSERT INTO `dnw_review_keyword` (pcategory,pcode,product_idx,create_date,keyword) VALUES("{review_keyword_dict["pcategory"]}","{review_keyword_dict["pcode"]}",{review_keyword_dict["product_idx"]},"{review_keyword_dict["create_date"]}","{review_keyword_dict["keyword"]}")""")
         mydb.commit()
         index_2 += 1
 
@@ -102,7 +101,7 @@ def insert_review_db(review):
         review_dict["title"] = checkDictValue_str(review[i],"Title")
         review_dict["content"] = checkDictValue_str(review[i],"Text")
         #print(feature_rating_dict)
-        cursor.execute(f"""INSERT INTO `dnw_review_tb` (pcategory,pcode,product_idx,create_date,rating,date,mall,title,content) VALUES("{review_dict["pcategory"]}","{review_dict["pcode"]}","{review_dict["product_idx"]}","{review_dict["create_date"]}","{math.floor(int(re.sub('[가-힣]','',review_dict["rating"]))/20)}","{review_dict["date"]}","{review_dict["mall"]}","{review_dict["title"]}","{review_dict["content"]}")""")
+        cursor.execute(f"""INSERT INTO `dnw_review` (pcategory,pcode,product_idx,create_date,rating,date,mall,title,content) VALUES("{review_dict["pcategory"]}","{review_dict["pcode"]}","{review_dict["product_idx"]}","{review_dict["create_date"]}","{math.floor(int(re.sub('[가-힣]','',review_dict["rating"]))/20)}","{review_dict["date"]}","{review_dict["mall"]}","{review_dict["title"]}","{review_dict["content"]}")""")
         mydb.commit()
         index_3 += 1
 
@@ -309,7 +308,6 @@ def goToDetailPage(detailURL,review_count,product_index):
     # with open(f'./result/{pcategory}/index{str(content_count).zfill(3)}_{script_json["sku"]}/review_keyword.json','w',encoding='utf-8') as f:
     #     json.dump(review_keyword,f,indent=4, ensure_ascii=False)
     # # print(review_keyword)
-
     insert_db(product_info,product_spectable,review_keyword)
     return review_count
 
@@ -335,8 +333,7 @@ def goToNextPage(cur_page,soup):
 
 options = Options()
 # options.add_argument("download.default_directory=C:\\Music")
-driver = webdriver.Firefox(options=options,executable_path=".\geckodriver.exe")
-driver.set_window_size(1920, 1080) 
+driver = webdriver.Firefox(options=options,executable_path=".\geckodriver.exe") 
 
 URL_ADDRESS = "https://prod.danawa.com/"
 URL_PREFIX = "list/?cate="
@@ -359,7 +356,7 @@ for pcategory in TITLE_LIST:
     while(True):
         time.sleep(2)
         try:
-                driver.find_element(By.CSS_SELECTOR,"li[data-view-method='LIST'] a").click()
+            driver.find_element(By.CSS_SELECTOR,"li[data-view-method='LIST'] a").click()
         except:
             print(f'error{pcategory}')
             break
@@ -373,14 +370,13 @@ for pcategory in TITLE_LIST:
         for content in contents:
             time.sleep(1)
             if content_count <= CONTENT_COUNT:
-                try:      
-                    detailURL = content.attrs["href"]
-                    review_count = goToDetailPage(detailURL,review_count,product_index)
-                    product_index += 1
-                    content_count += 1
-
-                except:   
-                    pass
+                # try:      
+                detailURL = content.attrs["href"]
+                review_count = goToDetailPage(detailURL,review_count,product_index)
+                product_index += 1
+                content_count += 1
+                # except:   
+                #     pass
             else:
                 isdone = True
                 break
