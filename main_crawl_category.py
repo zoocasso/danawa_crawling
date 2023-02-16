@@ -9,6 +9,7 @@ import json
 import os
 import re
 import math
+from tqdm import tqdm
 
 create_date = str(datetime.now()).split(' ')[0].strip()
 
@@ -182,9 +183,7 @@ def getSpecTable(product_spectable, soup):
         specTable_key_list.append(list_index.get_text().strip())
     for list_index in specTable_value:
         specTable_value_list.append(list_index.get_text().strip().replace("\n","").replace("\t","").rstrip("(제조사 웹사이트 바로가기)"))
-    specTable_key_list = list(filter(None, specTable_key_list))
-    specTable_value_list = list(filter(None, specTable_value_list))
-    for list_index in range(len(specTable_key)):
+    for list_index in range(len(specTable_key_list)):
         product_spectable[specTable_key_list[list_index]] = specTable_value_list[list_index]
 
 # 상품 정보페이지로 넘어가는 함수
@@ -342,7 +341,7 @@ REVIEW_COUNT = 20000
 input_txt = open("./input.txt","r", encoding="utf-8")
 TITLE_LIST = input_txt.read().splitlines()
 
-for pcategory in TITLE_LIST:
+for pcategory in tqdm(TITLE_LIST):
     # print(pcategory)
     content_count = 1
     review_count = 1
@@ -393,4 +392,3 @@ for pcategory in TITLE_LIST:
             # json.dump(review,f,indent=4, ensure_ascii=False)
             insert_review_db(review)
             break
-        
